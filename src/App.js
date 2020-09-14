@@ -254,12 +254,7 @@ function App() {
           </div>
         </div>
       </div>
-      {/* <div>
-        <HistoryList
-          historyStates={historyStates}
-          onHistoryStateClick={onHistoryStateClick}
-        />
-      </div> */}
+      
     </div>
   );
 }
