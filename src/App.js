@@ -117,7 +117,9 @@ function App() {
     
     <div className="App">
       <div className="container">
-        <div className="row">
+        <div>
+          
+      
         <PageHeader>INVOICE</PageHeader>
         <div className="App-invoice col-12">
           <Form horizontal>
@@ -204,11 +206,8 @@ function App() {
                 </FormControl>
               </Col>
             </FormGroup>
-            </Form>
-        </div>
-        <div className="App">
-            <div className="row">
-            <Form horizontal>
+
+            
             <LineItemList
               lineItems={editedInvoice.lineItems}
               currency={editedInvoice.currency}
@@ -238,10 +237,10 @@ function App() {
                 onChange={onFieldValueChange.bind(this, 'terms')}
               />
             </FormGroup>
-            </Form>
+          </Form>
         </div>
-        </div>
-        </div>
+
+          </div>
         <div className="Footer-Container">
           <div className="Footer">
             <Col sm={2}>
@@ -255,6 +254,12 @@ function App() {
           </div>
         </div>
       </div>
+      {/* <div>
+        <HistoryList
+          historyStates={historyStates}
+          onHistoryStateClick={onHistoryStateClick}
+        />
+      </div> */}
     </div>
   );
 }
