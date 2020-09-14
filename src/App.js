@@ -13,7 +13,6 @@ import dequal from 'dequal';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import './App.css';
-import HistoryList from './HistoryList';
 import LineItemList from './LineItemList.js';
 import { saveInvoicePDF } from './PDFService.js';
 import useLocalStorage from './useLocalStorage.ts';
@@ -23,12 +22,12 @@ const currencyCodes = Object.keys(symbols);
 const emptyState = {
   invoiceNumber: '',
   fromName: '',
-  imageLogo: null,
-  paymentTerms: '',
+  // imageLogo: null,
+  // paymentTerms: '',
   currency: 'CAD',
   toName: '',
   date: '',
-  dueDate: '',
+  // dueDate: '',
   lineItems: [],
   notes: '',
   terms: '',
@@ -50,16 +49,6 @@ function App() {
       ...stateUpdate,
     });
   }
-
-  function onImageLogoChange(event) {
-    let files = event.target.files;
-    let stateUpdate = {};
-    if (files.length > 0) {
-      stateUpdate.imageLogo = files[0];
-    }
-    setEditedInvoice({ ...editedInvoice, ...stateUpdate });
-  }
-
   function onLineItemDescriptionChange(params) {
     let lineItems = editedInvoice.lineItems;
     let lineItem = lineItems[params.index];
@@ -112,49 +101,11 @@ function App() {
     });
   }
 
-  function onExampleLinkClick() {
-    setEditedInvoice({
-      ...editedInvoice,
-      invoiceNumber: '123',
-      fromName: 'John Smith\n123 Address St.\nLos Angeles, CA 12345',
-      imageLogo: null,
-      paymentTerms: 'Biweekly',
-      currency: 'USD',
-      toName: 'Jane Smith\n999 Address St.\nSeattle, WA 54321',
-      date: '2016-10-10',
-      dueDate: '2016-11-01',
-      lineItems: [
-        {
-          description: 'Item #1',
-          quantity: 1,
-          rate: 1.5,
-        },
-        {
-          description: 'Item #2',
-          quantity: 2,
-          rate: 2.5,
-        },
-      ],
-      notes: 'This invoice does not include service fees.',
-      terms: 'Payment must be made via PayPal.',
-    });
-  }
-
+  
   function onClearFormClick() {
     setEditedInvoice(emptyState);
   }
 
-  function onRemoveImageClick() {
-    // Clear out the input file element
-    let inputElem = document.getElementById('imageLogo');
-    inputElem.value = '';
-
-    // Clear out the imageLogo on the state
-    setEditedInvoice({
-      ...editedInvoice,
-      imageLogo: null,
-    });
-  }
 
   function onSubmitClick() {
     saveInvoicePDF(editedInvoice);
@@ -162,28 +113,19 @@ function App() {
       setHistoryStates([editedInvoice, ...historyStates.slice(0, 24)]);
     }
   }
-
-  function onHistoryStateClick(historyState) {
-    setEditedInvoice(historyState);
-  }
-
   return (
+    
     <div className="App">
-      <div>
-        <PageHeader>Invoice Generator</PageHeader>
-        <p>
-          This is an invoice generator. Fill in the fields below and click
-          'Create Invoice' to generate the invoice as a PDF document.{' '}
-          <button onClick={onExampleLinkClick}>Click here</button> to see an
-          example.
-        </p>
-        <div className="App-invoice">
+      <div className="container">
+        <div className="row">
+        <PageHeader>INVOICE</PageHeader>
+        <div className="App-invoice col-12">
           <Form horizontal>
             <FormGroup controlId="invoiceNumber">
               <Col componentClass={ControlLabel} sm={2}>
                 Invoice #
               </Col>
-              <Col sm={10}>
+              <Col sm={4}>
                 <FormControl
                   type="text"
                   value={editedInvoice.invoiceNumber}
@@ -193,37 +135,23 @@ function App() {
             </FormGroup>
             <FormGroup controlId="fromName">
               <Col componentClass={ControlLabel} sm={2}>
-                From
+                MLSC #
               </Col>
-              <Col sm={10}>
+              <Col sm={4}>
                 <FormControl
                   componentClass="textarea"
-                  rows="3"
+                  rows="1"
                   placeholder="Who is this invoice from?"
                   value={editedInvoice.fromName}
                   onChange={onFieldValueChange.bind(this, 'fromName')}
                 />
               </Col>
             </FormGroup>
-            <FormGroup controlId="imageLogo">
-              <Col componentClass={ControlLabel} sm={2}>
-                Logo
-              </Col>
-              <Col sm={10}>
-                <FormControl
-                  type="file"
-                  onChange={onImageLogoChange.bind(this)}
-                />
-                {editedInvoice.imageLogo ? (
-                  <button onClick={onRemoveImageClick}>Remove image</button>
-                ) : null}
-              </Col>
-            </FormGroup>
             <FormGroup controlId="toName">
               <Col componentClass={ControlLabel} sm={2}>
-                Bill To
+                Property Address
               </Col>
-              <Col sm={10}>
+              <Col sm={4}>
                 <FormControl
                   componentClass="textarea"
                   rows="3"
@@ -235,9 +163,9 @@ function App() {
             </FormGroup>
             <FormGroup controlId="date">
               <Col componentClass={ControlLabel} sm={2}>
-                Date
+                 Deposit Date
               </Col>
-              <Col sm={10}>
+              <Col sm={4}>
                 <FormControl
                   type="date"
                   value={editedInvoice.date}
@@ -247,9 +175,9 @@ function App() {
             </FormGroup>
             <FormGroup controlId="dueDate">
               <Col componentClass={ControlLabel} sm={2}>
-                Due Date
+                Check Date
               </Col>
-              <Col sm={10}>
+              <Col sm={4}>
                 <FormControl
                   type="date"
                   value={editedInvoice.dueDate}
@@ -257,23 +185,11 @@ function App() {
                 />
               </Col>
             </FormGroup>
-            <FormGroup controlId="paymentTerms">
-              <Col componentClass={ControlLabel} sm={2}>
-                Payment Terms
-              </Col>
-              <Col sm={10}>
-                <FormControl
-                  type="text"
-                  value={editedInvoice.paymentTerms}
-                  onChange={onFieldValueChange.bind(this, 'paymentTerms')}
-                />
-              </Col>
-            </FormGroup>
             <FormGroup controlId="currency">
               <Col componentClass={ControlLabel} sm={2}>
                 Currency
               </Col>
-              <Col sm={10}>
+              <Col sm={4}>
                 <FormControl
                   componentClass="select"
                   placeholder="Select currency"
@@ -288,6 +204,11 @@ function App() {
                 </FormControl>
               </Col>
             </FormGroup>
+            </Form>
+        </div>
+        <div className="App">
+            <div className="row">
+            <Form horizontal>
             <LineItemList
               lineItems={editedInvoice.lineItems}
               currency={editedInvoice.currency}
@@ -297,6 +218,8 @@ function App() {
               onLineItemDeleteClick={onLineItemDeleteClick}
               onLineItemAddClick={onLineItemAddClick}
             />
+
+            
             <FormGroup>
               <ControlLabel>Notes</ControlLabel>
               <FormControl
@@ -315,7 +238,9 @@ function App() {
                 onChange={onFieldValueChange.bind(this, 'terms')}
               />
             </FormGroup>
-          </Form>
+            </Form>
+        </div>
+        </div>
         </div>
         <div className="Footer-Container">
           <div className="Footer">
@@ -329,12 +254,6 @@ function App() {
             </Col>
           </div>
         </div>
-      </div>
-      <div>
-        <HistoryList
-          historyStates={historyStates}
-          onHistoryStateClick={onHistoryStateClick}
-        />
       </div>
     </div>
   );
